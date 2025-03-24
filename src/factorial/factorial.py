@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #*-------------------------------------------------------------------------*
 #* factorial.py                                                            *
-#* calcula el factorial de un número                                       *
+#* calcula el factorial de un número o un rango de números                 *
 #* Dr.P.E.Colla (c) 2022                                                   *
 #* Creative commons                                                        *
 #*-------------------------------------------------------------------------*
@@ -20,35 +20,30 @@ def factorial(num):
             num -= 1
         return fact 
 
-def process_range(range_str):
-    # Procesar cadena de rango (por ejemplo "4-8")
-    if "-" in range_str:
-        parts = range_str.split("-")
-        if len(parts) == 2:
-            try:
-                min_val = int(parts[0])
-                max_val = int(parts[1])
-                return min_val, max_val
-            except ValueError:
-                print("Formato de rango inválido. Usando valor predeterminado.")
-    
-    # Si no es un rango válido, convertir a un solo número
-    try:
-        num = int(range_str)
-        return num, num
-    except ValueError:
-        print("Valor inválido. Usando valor predeterminado.")
-        return 1, 1
+def procesar_entrada(entrada):
+    # Verificar si es un rango (contiene guion)
+    if "-" in entrada:
+        partes = entrada.split("-")
+        # Verificar si tiene formato correcto
+        if len(partes) == 2:
+            inicio = int(partes[0]) if partes[0] else 1
+            fin = int(partes[1]) if partes[1] else 60
+            
+            # Calcular factoriales del rango
+            for num in range(inicio, fin + 1):
+                print(f"Factorial {num}! es {factorial(num)}")
+        else:
+            print("Formato de rango inválido. Use 'inicio-fin'.")
+    else:
+        # Es un solo número
+        num = int(entrada)
+        print(f"Factorial {num}! es {factorial(num)}")
 
 # Verificar si se proporcionó un argumento
 if len(sys.argv) <= 1:
     # Si no hay argumento, solicitar al usuario
-    range_input = input("Ingrese un número o rango (ej. 4-8) para calcular factorial(es): ")
-    min_num, max_num = process_range(range_input)
+    entrada = input("Ingrese un número o rango (ej. 4-8) para calcular factorial(es): ")
+    procesar_entrada(entrada)
 else:
     # Si hay argumento, usarlo
-    min_num, max_num = process_range(sys.argv[1])
-
-# Calcular y mostrar factoriales para el rango especificado
-for num in range(min_num, max_num + 1):
-    print(f"Factorial {num}! es {factorial(num)}")
+    procesar_entrada(sys.argv[1])
